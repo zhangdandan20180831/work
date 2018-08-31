@@ -1,0 +1,22 @@
+仓库	cost_storage
+权限表	cost_resource
+模板明细表	cost_mmode_cuisine
+模板有效时间表	cost_time
+模板菜单中间表	cost_menu_mode_menu
+模板表	cost_menu_mode
+用户表	cost_user
+用户角色关系表	cost_user_role
+用户角色经营单位中间表	cost_user_rose_operate_manage
+管理单位表	cost_manage
+经营单位管理单位中间表	cost_operate_manage
+经营单位表	cost_operate
+菜单明细表	cost_menu_cuisine
+菜单表	cost_menu
+菜品分类表	cost_cuisine_type
+菜品表	        cost_cuisine
+菜品食材关系表	cost_cuisine_ingredient
+菜系表	        cost_series
+角色权限中间表	cost_rose_resource
+角色表	        cost_role
+
+
