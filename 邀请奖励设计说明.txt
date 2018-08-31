@@ -1,0 +1,120 @@
+
+alter table em_order add reward_calculate_state int not null default 0; # 奖励金计算状态
+
+
+app邀请关系记录表
+
+主键
+邀请人ID    inviter_id
+被邀请人ID  invitee_id
+
+
+邀请页面注册成功
+    判断是否有邀请人ID
+        有
+    		保存邀请人被邀请人的关系
+    	无
+    	    无操作
+
+
+邀请奖励参数设置表
+
+订单奖励百分比    order_reward_percent
+奖励金满足金额    reward_enough_amount
+奖励金返现百分比  reward_cashback_percent
+
+
+奖励金计算记录表
+
+主键
+邀请人ID           inviter_id
+被邀请人ID         invitee_id
+奖励金类型（订单奖励金1  奖励金足额奖励2） reward_type
+订单奖励百分比   order_reward_percent
+奖励金满足金额   reward_enough_amount
+奖励金返现百分比 reward_cashback_percent
+本次订单奖励金额 order_reward_amount
+累计奖励金额     total_order_reward_amount
+返现金额         cashback_amount
+是否返现给上级（初始0  已返现1）  cashback_state
+奖励时间    reward_date
+订单号      order_id
+
+
+
+奖励金累计金额表
+
+主键
+邀请人ID
+累计奖励金额
+尚未返现金额
+是否结算    settle_state
+结算日期    settle_date
+
+订单表
+	增加奖励金计算状态（初始0  已计算1）   reward_calculate_state
+
+
+新建订单
+    奖励金计算状态 设置为 0
+
+订单结束增加奖励金计算方法
+
+	  判断买方是否存在邀请人
+	     存在
+	        获取订单奖励百分比
+	        计算奖励金(订单金额*订单奖励百分比)
+	        上次累计奖励金+本次奖励金
+	        生成奖励金记录表数据
+	        标记订单奖励金计算状态=已计算
+
+	        判断邀请人是否存在上级
+	            是
+				    判断是否要返现给邀请人的上级（累计奖励金>=奖励金满足金额）
+			    	    是
+			    	        返现金额 = 累计奖励金 * 奖励金返现百分比
+			    	        增加给上级的返现记录
+			    	        
+			    	        标记类型为订单奖励金的未返现的记录状态为=已返现
+			    	    否
+			    	        无操作
+	            否
+	                无操作
+
+	     不存在
+	        无操作
+
+
+1、可以定期汇总要结算的奖励金记录推送到财务系统
+	执行划款---成功回调修改相应的记录=已结算 标记结算日期
+2、按时间段查询出一段时间内的 结算记录
+    财务照汇总结果录入---划款---成功回调修改相应的记录=已结算 标记结算日期
+    时间灵活增加了人工录入的过程
+
+
+
+3、快捷交易平台，订单付款付给了平台的支付宝或者微信账户
+
+
+4、买家邀请用户获得收益 怎么知道买家的收款账户
+
+    
+
+买家奖励金提现
+    
+
+
+
+
+
+
+支付宝转账接口
+
+接口 PayDispacherService  方法transferAccounts
+params： Map<String,Object>
+mmbId 会员id string 
+amount :转账金额 String 
+payType:alipay
+
+return:
+    return_code 2000成功  2001 异常  2002 失败

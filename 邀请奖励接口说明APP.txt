@@ -1,0 +1,51 @@
+1、查询邀请信息，奖励金信息
+
+	url：
+		/appReward/showRewardInfo.app
+
+	参数：
+		sys_token  
+	    phone
+	    
+	返回：
+		
+		成功：
+		{
+			"all_relation_num": 4,         我的人脉  人数(递归统计)
+			"balance": 90,                 余额
+			"invitee_num": 1,              我推荐的人 直接关系人 人数
+			"inviter_phone": "无",         我推荐的人 手机号
+			"return_code": 0,
+			"return_message": "成功",
+			"total_amount": 100,           我的总收益 double
+			"withdraw_amount": 10          已取现double
+		}
+		失败：
+		    
+		{
+			"return_code": 999,
+			"return_message": "发生错误"
+		}
+
+2、申请提现
+
+	url：
+		/appReward/withdraw.app
+	参数：
+		
+		sys_token
+		phone
+
+		account  支付宝账户
+		amount   提现金额（double）
+	返回：
+		
+		{
+			"return_code": 0,
+			"return_message": "成功"
+		}
+		{
+			"return_code": 999,
+			"return_message": "发生错误"
+		}
+

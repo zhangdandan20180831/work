@@ -1,0 +1,98 @@
+1、查询累计奖励金
+
+	url：
+		/rewardController/queryTotalRewardList.do
+
+	参数：
+		pageNo  
+	    pageSize
+	    以下页面上查询条件
+	    inviter：邀请人
+	返回：
+		
+		{
+		    "total": 1,
+		    "rows": [
+		        {
+		            "totalRecordId": "1",
+		            "userId": "18401599490",
+		            "totalRewardAmount": 100,
+		            "notCashbackAmount": 0,
+		            "withdrawAmount": 10
+		        }
+		    ]
+		}
+		返回参数中多余出来的数据不用管
+
+
+2、根据邀请人查询奖励金明细
+
+	url：
+		/rewardController/queryRewardRecordList.do
+	参数：
+		inviter：邀请人ID
+		pageNo  
+	    pageSize
+	    以下页面上查询条件
+	    
+	    startDate：开始日期
+	    endDate：截止日期
+	    
+
+	返回：
+		{
+		    "total": 1,
+		    "rows": [
+		        {
+		            "recordId": "1",
+		            "userId": "18401599490",
+		            "orderRewardPercent": 1,
+		            "rewardEnoughAmount": 100,
+		            "rewardCashbackPercent": 5,
+		            "rewardAmount": 10,
+		            "rewardDate": 1534262400000,
+		            "orderId": "100002",
+		            "rewardDateStr": "2018-08-15"
+		        }
+		    ]
+		}
+		返回参数中多余出来的数据不用管
+
+3、查询所有提现申请记录
+
+	url：
+		/rewardController/queryWithdrawList.do
+	参数：
+	    pageNo  
+	    pageSize
+	    以下页面上查询条件
+	    getUser:收款人ID
+	    startDate：提现日期开始
+	    endDate：提现日期开始
+
+	返回：
+
+		{
+		    "total": 1,
+		    "rows": [
+		        {
+		            "withdrawId": "1000001",
+		            "getUserId": "18401599490",
+		            "withdrawDate": 1534262400000,
+		            "payAccount": "这个没用",
+		            "getAccount": "15100330088",
+		            "amount": 100,
+		            "operateId": "XXX",
+		            "withdrawState": 0,
+		            "remark": "无",
+		            "payType": 0,
+		            "settleDate": 1534262400000,
+		            "withdrawDateStr": "2018-08-15",
+		            "settleDateStr": "2018-08-15"
+		        }
+		    ]
+		}
+
+
+跳转提现记录页面
+		/rewardController/toWithdrawList.do

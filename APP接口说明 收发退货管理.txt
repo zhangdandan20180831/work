@@ -1,0 +1,884 @@
+﻿
+===================================================
+============收发货管理AppOrderGoods================
+===================================================
+
+地址管理
+接口url：appOrderGoods/queryMmbWareHouse
+功能描述：地址列表展示
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	pageno	int	开始行
+	pagesize	int	页条数
+	address2	string	地址名称
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	rows	list
+		address	string	地址
+		areaDesc	string	所属地域
+		zipcode	string	邮编
+		contact	string	联系人名称
+		mobilephone	string	手机号
+		phone	string	电话号码
+		id	string	地址id
+1.传入参数
+param={
+    "sys_user": "e9498a4106af4ba29d32bf4f6b42b500",
+    "sys_member": "testshop001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033",
+	"pageno":"1",
+	"pagesize":"2",
+    "address2": ""
+}
+2.返回参数
+{
+    "return_code": 0,
+    "return_message": "success",
+    "rows": [
+        {
+            "address": "o.懦弱需要",
+            "areaDesc": "",
+            "contact": "",
+            "id": "12d9f0fe901a472f902c4cd3641a1783",
+            "mobilephone": "",
+            "phone": "",
+            "zipcode": ""
+        },
+        {
+            "address": "图兔兔",
+            "areaDesc": "",
+            "contact": "",
+            "id": "5a573889d2d341aeb2b34a2ad6a78f3a",
+            "mobilephone": "",
+            "phone": "",
+            "zipcode": "bbhh"
+        }
+    ],
+    "total": 20
+}
+
+===================================================================================
+
+接口url：appOrderGoods/toEditMmbWarehouse
+功能描述：编辑查询
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	id	string	地址id	
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	row 单个
+		address	string	地址
+		areaDesc	string	所属地域
+		zipcode	string	邮编
+		contact	string	联系人名称
+		mobilephone	string	手机号
+		phone	string	电话号码
+		id	string	地址id
+		
+1、传入参数
+param={
+    "sys_user": "e9498a4106af4ba29d32bf4f6b42b500",
+    "sys_member": "testshop001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033",
+    "id": "5a573889d2d341aeb2b34a2ad6a78f3a"
+}
+2.返回参数
+{
+    "return_code": 0,
+    "return_message": "success",
+    "row": {
+        "address": "3212",
+        "areaDesc": "",
+        "areaId": "",
+        "contact": "ss",
+        "id": "5a573889d2d341aeb2b34a2ad6a78f3a",
+        "mobilephone": "15003340338",
+        "phone": "15003340338",
+        "zipcode": "000000"
+    }
+}
+===================================================================================
+
+接口url：appOrderGoods/getTreeModal
+功能描述：获取地域树
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	area_tree list
+		areaCode  string   区域编码
+		id  string   区域ID
+		nodes  string   [   子节点
+			{
+				areaCode  string   区域编码
+				id  string   区域ID
+				parentCode  string   父结点编码
+				sysCode  string   系统编码
+				text  string   区域名称
+			}
+		]
+		parentCode  string   父结点编码
+		sysCode  string   系统编码
+		text  string   区域名称
+
+*********************************************************
+备注：
+此处只需要用到的是
+id----------------------------------------->areaId
+text
+其他均辅助作用
+**********************************************************		
+1、传入参数
+http://localhost:8080/v2/appOrderGoods/getTreeModal.app?
+param={
+    "sys_user": "e9498a4106af4ba29d32bf4f6b42b500",
+    "sys_member": "testshop001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033"
+}
+2.返回参数
+{
+    "area_tree": [
+        {
+            "areaCode": "110002",
+            "id": "1",
+            "nodes": [
+                {
+                    "areaCode": "110101",
+                    "id": "3",
+                    "parentCode": "110002",
+                    "sysCode": "100010111101",
+                    "text": "东城区"
+                },
+                {
+                    "areaCode": "110102",
+                    "id": "4",
+                    "parentCode": "110002",
+                    "sysCode": "100010111102",
+                    "text": "西城区"
+                }
+            ],
+            "parentCode": "100",
+            "sysCode": "10001011",
+            "text": "北京市"
+        },
+        {
+            "areaCode": "120000",
+            "id": "22",
+            "nodes": [
+                {
+                    "areaCode": "120101",
+                    "id": "24",
+                    "parentCode": "120000",
+                    "sysCode": "100010121101",
+                    "text": "和平区"
+                },
+                {
+                    "areaCode": "120102",
+                    "id": "25",
+                    "parentCode": "120000",
+                    "sysCode": "100010121102",
+                    "text": "河东区"
+                }
+            ],
+            "parentCode": "100",
+            "sysCode": "10001012",
+            "text": "天津市"
+        }
+    ],
+    "return_code": 0,
+    "return_message": "success"
+}
+===================================================================================
+接口url：appOrderGoods/updateMmbWarehouse
+功能描述：编辑确认
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	
+	address	string	地址
+	areaId	string	所属地域ID
+	zipcode	string	邮编
+	contact	string	联系人名称
+	mobilephone	string	手机号
+	phone	string	电话号码
+	id	string	地址id
+	
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+
+1.传入参数
+http://localhost:8080/v2/appOrderGoods/updateMmbWarehouse.app?
+param={
+    "sys_user": "e9498a4106af4ba29d32bf4f6b42b500",
+    "sys_member": "testshop001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033",
+	"address": "3212",
+	"areaId": "24",
+	"contact": "321dddd",
+	"id": "5a573889d2d341aeb2b34a2ad6a78f3a",
+	"mobilephone": "15003340338",
+	"phone": "15003340338",
+	"zipcode": "000000"
+}
+2.传出参数
+{
+    "return_code": 0,
+    "return_message": "修改成功"
+}
+===================================================================================
+
+接口url：appOrderGoods/deleteMmbWarehouse
+功能描述：删除地址
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	id	string	地址id
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	successMsg  成功提示信息
+	errorMsg    失败提示信息
+传入参数
+param={
+    "sys_user": "e9498a4106af4ba29d32bf4f6b42b500",
+    "sys_member": "testshop001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033",
+    "id": "08f6b2c8029e41aea7e9e01b0ce9bda4",
+    
+}
+传出参数
+{
+    "return_code": 0,
+    "return_message": "success",
+    "successMsg": "删除会员仓库成功!"
+}
+
+===================================================================================
+
+接口url：appOrderGoods/createMmbWarehouse
+功能描述：添加确认
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	
+	address	string	地址（必填）
+	areaId	string	所属地域ID
+	zipcode	string	邮编
+	contact	string	联系人名称
+	mobilephone	string	手机号
+	phone	string	电话号码
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	successMsg   成功提示信息
+	errorMsg     失败提示信息
+1.传入参数
+param={
+    "sys_user": "e9498a4106af4ba29d32bf4f6b42b500",
+    "sys_member": "testshop001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033",
+	"address": "仓库1",
+	"areaId": "24",
+	"contact": "陈长生",
+	"id": "5a573889d2d341aeb2b34a2ad6a78f3a",
+	"mobilephone": "15003340338",
+	"phone": "15003340338",
+	"zipcode": "000000"
+}
+2.传出参数
+{
+    "return_code": 0,
+    "return_message": "success",
+    "successMsg": "创建会员仓库成功!"
+}
+===================================================================================
+
+收货
+
+接口url：appOrderGoods/queryGetGoods
+功能描述：查询收货列表
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	ordertitleNumber	string	订单编号
+	goodsName	string	商品名称
+	pageno	    int	开始条数
+	pagesize	int	展示条数
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	total	int	总条数
+	rows list<map>
+		
+		address_list: [    收货地址列表
+			{
+				address: 地址     
+				id: 地址id
+			},
+		],
+		exe_getgoods_num: string 待收数量
+		getgoods_num: string 已收数量
+		goodsName: 商品名称
+		orderId: 订单id
+		ordertitleCode: 订单头ID
+		ordertitleNumber: 订单编号
+		sellers_name: 发货方
+		goods_num： string 总数
+
+1.传入参数(示例只查了一条数据)
+param={
+    "sys_user": "0236e1f6e6474da88ff1388e8ae2d46d",
+    "sys_member": "testschool001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033",
+	"pageno":"1",
+	"pagesize":"1",
+	"goodsName":"",
+	"ordertitleNumber":""
+}
+2.返回数据
+{
+    "return_code": 0,
+    "return_message": "success",
+    "rows": [
+        {
+            "address_list": [
+                {
+                    "address": "app test 2",
+                    "id": "7fda1ceb40874b9aa7f8008487ac354e"
+                },
+                {
+                    "address": "合肥",
+                    "id": "f231868a67b3466e931cc68ef820e3d2"
+                }
+            ],
+            "exe_getgoods_num": 225,
+            "getgoods_num": 1035,
+            "goodsName": "散装农场青菜",
+            "goods_num": 3000,
+            "orderId": "2f364bdfb99746eabed89f6a4715a394",
+            "ordertitleCode": "ea9cdbd8c4bf40bea46794b1627ab351",
+            "ordertitleNumber": 10038443,
+            "sellers_name": "长城商行"
+        },
+        {
+            "address_list": [
+                {
+                    "address": "app test 2",
+                    "id": "7fda1ceb40874b9aa7f8008487ac354e"
+                },
+                {
+                    "address": "合肥",
+                    "id": "f231868a67b3466e931cc68ef820e3d2"
+                }
+            ],
+            "exe_getgoods_num": 24,
+            "getgoods_num": 31,
+            "goodsName": "糯米",
+            "goods_num": 55,
+            "orderId": "f1018be9f1e14d78a131b77973056982",
+            "ordertitleCode": "913eb5f4a81a42cfaa3308e309defb4f",
+            "ordertitleNumber": 10038435,
+            "sellers_name": "北京尚德粮油商贸公司"
+        }
+    ],
+    "total": 11
+}
+===================================================================================
+
+
+接口url：appOrderGoods/getGoods
+功能描述：收货操作
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	
+	num_list
+		orderId   string  订单ID(多选，ID之间英文逗号分隔)   不允许空
+		num	       string	本次收货数量    不允许空
+		address_id string  收货地址ID   不允许空
+	
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+
+	success_num  int 收货成功个数
+	fail_num     int 收货失败个数
+	
+	提示信息参考  "收货成功"+success_num+"条\n收货失败"+fail_num+"条"
+1.传入参数
+param={
+    "sys_user": "0236e1f6e6474da88ff1388e8ae2d46d",
+    "sys_member": "testschool001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033",
+	"sys_name":"as02",
+	
+	"num_list":[
+	  {
+	       "orderId":"ea9cdbd8c4bf40bea46794b1627ab351",
+	       "num":"1000",
+	       "address_id":"f231868a67b3466e931cc68ef820e3d2",
+	  },
+	  {
+		   "orderId":"913eb5f4a81a42cfaa3308e309defb4f",
+	       "num":"1",
+	       "address_id":"f231868a67b3466e931cc68ef820e3d2",
+	  }
+	]
+}
+2.传出参数
+{
+    "fail_num": 1,
+    "return_code": 0,
+    "return_message": "success",
+    "success_num": 1
+}
+===================================================================================
+
+发货
+
+接口url：appOrderGoods/querySendGoods
+功能描述：查询发货列表
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	
+	sys_member	string	会员id
+	pageno	int	开始条
+	pagesize	int	结束条数
+	
+	ordertitleNumber	string	订单号
+	goodsName	string	商品名
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	count	int	总条数
+	rows:list<map>
+		ordertitleNumber	string	订单号
+		ordertitleCode	string	订单头ID
+		buyers_name	string	收货方
+		goods_name	string	商品名
+		goods_num	string	总数
+		sendgoods_num	string	已发数量
+		exe_sendgoods_num	string	待发数量
+		
+1.传入参数
+param={
+    "sys_user": "e9498a4106af4ba29d32bf4f6b42b500",
+    "sys_member": "testshop001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033",
+	"pageno":"1",
+	"pagesize":"2",
+    "ordertitleNumber": "",
+    "goodsName": ""
+}
+2.返回参数
+{
+    "return_code": 0,
+    "return_message": "success",
+    "rows": [
+        {
+            "buyers_name": "奥森学校",
+            "exe_sendgoods_num": 100,
+            "goods_name": "四季豆",
+            "goods_num": 100,
+            "orderId": "4988ea3623bd4ddd933ecde753201818",
+            "ordertitleCode": "1d43817f78044b369987059d5174d143",
+            "ordertitleNumber": 10000302,
+            "sendgoods_num": 0
+        },
+        {
+            "buyers_name": "奥森学校",
+            "exe_sendgoods_num": 1740,
+            "goods_name": "散装农场青菜",
+            "goods_num": 3000,
+            "orderId": "2f364bdfb99746eabed89f6a4715a394",
+            "ordertitleCode": "ea9cdbd8c4bf40bea46794b1627ab351",
+            "ordertitleNumber": 10038443,
+            "sendgoods_num": 1260
+        }
+    ],
+    "total": 9
+}
+===================================================================================
+
+接口url：appOrderGoods/sendGoods
+功能描述：发货操作
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name    string  当前登录用户名
+	sys_member	string	会员id
+	orderList	
+		orderId	    string	订单id
+		sendgoods_num	string	本次发货数量
+		
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	fail_num      int   发货成功个数
+	success_num   int   发货失败个数
+	
+提示信息参考
+"发货成功"+success_num+"条\n发货失败"+fail_num+"条"
+
+1.传入参数
+param={
+    "sys_user": "e9498a4106af4ba29d32bf4f6b42b500",
+    "sys_member": "testshop001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033",
+	"sys_name":"zdd",
+    "orderList": [
+        {
+            "orderId": "4988ea3623bd4ddd933ecde753201818",
+            "sendgoods_num": "120",
+        },
+		{
+            "orderId": "2f364bdfb99746eabed89f6a4715a394",
+            "sendgoods_num": "10",
+        }
+    ]
+}
+2.传出参数
+{
+    "fail_num": 1,
+    "return_code": 0,
+    "return_message": "success",
+    "success_num": 1
+}
+===================================================================================
+
+退货
+接口url：appOrderGoods/queryReturnGoods
+功能描述：退货列表展示
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	goodsName	string	商品名
+	ordertitleNumber	string	订单号
+	pageno	int	开始条
+	pagesize	int	结束条数
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	rows	list<map>	列表
+		exe_returngoods_num: string 待退数量
+		goods_name: string 商品名
+		goods_num:  string	总数
+		orderId:   string 订单ID
+		ordertitleCode: string 订单头ID
+		ordertitleNumber: string 订单编号
+		sellers_name: 退到
+1.传入参数
+param={
+    "sys_user": "0236e1f6e6474da88ff1388e8ae2d46d",
+    "sys_member": "testschool001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033",
+	"pageno":"1",
+	"pagesize":"2",
+    "ordertitleNumber": "",
+    "goodsName": ""
+}
+
+2.传出参数
+{
+    "return_code": 0,
+    "return_message": "success",
+    "rows": [
+        {
+            "exe_returngoods_num": 111,
+            "goods_name": "山东大米",
+            "goods_num": 111,
+            "orderId": "b7a77e840037449e8dd644c27e311005",
+            "ordertitleCode": "55823d8d001d4ca8b361dec0c07130fe",
+            "ordertitleNumber": 10038444,
+            "sellers_name": "长城商行"
+        },
+        {
+            "exe_returngoods_num": 1035,
+            "goods_name": "散装农场青菜",
+            "goods_num": 3000,
+            "orderId": "2f364bdfb99746eabed89f6a4715a394",
+            "ordertitleCode": "ea9cdbd8c4bf40bea46794b1627ab351",
+            "ordertitleNumber": 10038443,
+            "sellers_name": "长城商行"
+        }
+    ],
+    "total": 30
+}
+===================================================================================
+
+接口url：appOrderGoods/returnGoods
+功能描述：退货操作
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	orderList	list<map>
+		orderId  string  订单id
+		num	string	本次退货数量
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	
+	fail_num     int   退货失败数量
+	success_num  int   退货成功数量
+
+
+提示信息参考
+"退货成功"+success_num+"条\n退货失败"+fail_num+"条"
+	
+1.传入参数
+
+param={
+    "sys_user": "0236e1f6e6474da88ff1388e8ae2d46d",
+    "sys_member": "testschool001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033",
+	"sys_name":"as02",
+    "orderList": [
+        {
+            "orderId": "b7a77e840037449e8dd644c27e311005",
+            "num": "120",
+        },
+		{
+            "orderId": "2f364bdfb99746eabed89f6a4715a394",
+            "num": "10",
+        }
+    ]
+}
+
+2.传出参数
+{
+    "fail_num": 1,
+    "return_code": 0,
+    "return_message": "success",
+    "success_num": 1
+}
+===================================================================================
+
+收退货
+
+接口url：appOrderGoods/queryGetReturnGoods
+功能描述：收退货列表展示
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	
+	pageno	int	开始条
+	pagesize	int	结束条数
+	
+	goodsName	string	商品名
+	ordertitleNumber	string	订单号
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	rows	list<map>	列表
+		address_list    [
+			{
+				address  string   收货地址
+				id      string    收货地址ID
+			}
+		]
+		buyers_name  string 退货方
+		exeGetreturngoodsNum  string  待收数量
+		getreturngoodsNum  string  已收数量
+		goods_name  string  商品名称
+		goods_num  string  总数
+		orderId     string      订单ID
+		ordertitleCode string   订单头ID
+		ordertitleNumber  string  订单编号
+1.传入参数
+param={
+    "sys_user": "e9498a4106af4ba29d32bf4f6b42b500",
+    "sys_member": "testshop001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033",
+	"pageno":"1",
+	"pagesize":"2",
+    "ordertitleNumber": "",
+    "goodsName": ""
+}
+2.传出参数
+{
+    "return_code": 0,
+    "return_message": "success",
+    "rows": [
+        {
+            "address_list": [
+                {
+                    "address": "o.懦弱需要",
+                    "id": "12d9f0fe901a472f902c4cd3641a1783"
+                },
+                {
+                    "address": "图兔兔",
+                    "id": "5a573889d2d341aeb2b34a2ad6a78f3a"
+                }
+            ],
+            "buyers_name": "奥森学校",
+            "exeGetreturngoodsNum": 10,
+            "getreturngoodsNum": 10,
+            "goods_name": "散装农场青菜",
+            "goods_num": 3000,
+            "orderId": "2f364bdfb99746eabed89f6a4715a394",
+            "ordertitleCode": "ea9cdbd8c4bf40bea46794b1627ab351",
+            "ordertitleNumber": 10038443
+        },
+        {
+            "address_list": [
+                {
+                    "address": "o.懦弱需要",
+                    "id": "12d9f0fe901a472f902c4cd3641a1783"
+                },
+                {
+                    "address": "图兔兔",
+                    "id": "5a573889d2d341aeb2b34a2ad6a78f3a"
+                }
+            ],
+            "buyers_name": "奥森学校",
+            "exeGetreturngoodsNum": 30,
+            "getreturngoodsNum": 40,
+            "goods_name": "土鸡",
+            "goods_num": 120,
+            "orderId": "83f20885795b4aa5b750198a477574ac",
+            "ordertitleCode": "d411211cbd734b0683816457b97be403",
+            "ordertitleNumber": 10038405
+        }
+    ],
+    "total": 2
+}
+
+===================================================================================
+
+接口url：appOrderGoods/getReturnGoods
+功能描述：签收退货操作
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	orderList	list<map>
+		orderId	String	订单id
+		num	int	本次收货数量
+		address_id	string	收货地址ID
+
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	
+	fail_num     int   退货失败数量
+	success_num  int   退货成功数量
+
+
+提示信息参考
+"收退货成功"+success_num+"条\n收退货失败"+fail_num+"条"
+
+
+1.传入参数
+http://localhost:8080/v2/appOrderGoods/getReturnGoods.app?
+param={
+    "sys_user": "e9498a4106af4ba29d32bf4f6b42b500",
+    "sys_member": "testshop001",
+	"sys_func":"1212",
+	"sys_token":"1212",
+	"sys_uuid":"00033",
+    "orderList": [
+        {
+            "orderId": "83f20885795b4aa5b750198a477574ac",
+            "num": "1",
+			"address_id":"5a573889d2d341aeb2b34a2ad6a78f3a"
+        },
+		{
+            "orderId": "2f364bdfb99746eabed89f6a4715a394",
+            "num": "500",
+			"address_id":"12d9f0fe901a472f902c4cd3641a1783"
+        }
+    ]
+}
+2.传出参数
+{
+    "fail_num": 1,
+    "return_code": 0,
+    "return_message": "success",
+    "success_num": 1
+}
+
+===================================================================================

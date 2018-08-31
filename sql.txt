@@ -1,0 +1,95 @@
+drop table if exists ex_inviter_invitee_relation;
+
+/*==============================================================*/
+/* Table: ex_inviter_invitee_relation                           */
+/*==============================================================*/
+create table ex_inviter_invitee_relation
+(
+   relation_id          varchar(50) not null comment '主键',
+   inviter_id              varchar(50) comment '邀请人ID',
+   invitee_id          varchar(50) comment '被邀请人ID',
+   primary key (relation_id)
+);
+
+
+drop table if exists ex_reward_record;
+
+/*==============================================================*/
+/* Table: ex_reward_record                                      */
+/*==============================================================*/
+create table ex_reward_record
+(
+   record_id            varchar(50) not null comment '主键',
+   user_id              varchar(50) comment '用户ID',
+   order_reward_percent double(16,2),
+   reward_enough_amount double(16,2),
+   reward_cashback_percent double(16,2),
+   reward_amount        double(16,2),
+   reward_date          date,
+   order_id             varchar(50),
+   primary key (record_id)
+);
+
+
+
+drop table if exists ex_total_reward_record;
+
+/*==============================================================*/
+/* Table: ex_total_reward_record                                */
+/*==============================================================*/
+create table ex_total_reward_record
+(
+   total_record_id      varchar(50) not null comment '主键',
+   user_id              varchar(50) comment '用户ID',
+   total_reward_amount  double(16,2) comment '累计奖励金额',
+   not_cashback_amount  double(16,2) comment '尚未返现金额',
+   withdraw_amount      double(16,2) comment '已提现金额',
+   primary key (total_record_id)
+);
+
+
+
+drop table if exists ex_withdraw_record;
+
+/*==============================================================*/
+/* Table: ex_withdraw_record                                    */
+/*==============================================================*/
+create table ex_withdraw_record
+(
+   withdraw_id          varchar(50) not null comment '主键',
+   get_user_id          varchar(50) comment '用户ID',
+   withdraw_date        date,
+   pay_account          varchar(30),
+   get_account          varchar(30),
+   amount               double(16,2),
+   operate_id           varchar(50) comment '用户ID',
+   withdraw_state       int,
+   remark               varchar(200),
+   pay_type             int,
+   settle_date          date,
+   primary key (withdraw_id)
+);
+
+
+
+
+
+
+
+drop table if exists ex_reward_param;
+
+/*==============================================================*/
+/* Table: ex_reward_param                                       */
+/*==============================================================*/
+create table ex_reward_param
+(
+   param_id             varchar(50) not null comment '主键',
+   order_reward_percent double(16,2) comment '订单奖励百分比',
+   reward_enough_amount double(16,2),
+   reward_cashback_percent double(16,2),
+   primary key (param_id)
+);
+
+
+
+alter table em_order add reward_calculate_state int not null default 0; # 奖励金计算状态

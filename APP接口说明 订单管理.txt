@@ -1,0 +1,344 @@
+﻿===================================================
+============订单管理 AppOrder======================
+===================================================
+采购拣单车
+1、接口url：appOrder/searchSHPC
+功能描述：采购（销售）拣单车中商品list
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	type	string	采购1，销售0
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	list list<map>	
+		mmbid	string	所属商家id
+		mmbName	string	所属商家名称
+		listGoods list<map>
+			goodsId	string	商品id
+			goodsName	shring	商品名
+			minPrice	string	最低单价
+			maxPrice	string	最高单价
+========================================================================
+
+2、接口url：appOrder/deleteQuoteSHPC
+功能描述：删除采购 (销售)拣单车中商品
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	type	string	采购1，销售0
+	index	int	商品下标（从0开始）
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	data	int	0成功1失败
+===================================================================================
+
+3、接口url：appOrder/createOrder
+功能描述：订单创建提交
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	param（实体）
+		orderList list<map>
+			buyersId	string	买方id	testshop001
+			buyersName	string	买方名字 长城商行
+			categoryId	string	分类id 1002003001
+			goodsId	string	商品id 028f5ff16dd24c1195b91dcea6abd140
+			goodsNum	int	数量 12
+			money	double	总钱数 15996.0
+			price	double	单价 1333.0
+			quoteId	string	报价id 30038632
+			sellersId	string	卖方id da4383de72494f5d98dc7836d25f526f
+			sellerName	string	卖方名字 cyh
+		buyersAddressId	string	买方id 388f41ee44b04aeea3640140f91f380e
+		buyersAddressName	string	买方地址 Beijing
+		buyerName	string	买方名字 长城商行 
+		executeEndTime	string	执行最晚时间 2017-05-16
+		executeStartTime	string	执行最早时间 2017-05-16
+		getAccount	string	卖方账号
+		getBank	string	卖方银行
+		payAccount	string	支付账号 123214453454
+		payBank	string	支付银行 中国银行
+		payTime	string	支付时间 2017-05-16
+		sellerAddressId	卖方地址id
+		sellerAddressName	string	卖方地址名称
+		sellerName	string	卖方名称 刘长城
+		totalMoney	double	总金额 15996.0
+		workflowTypeId	int 3	订单流程（1货款两清2先货后款3先货后款已交货4先款后货5先款后货已收款）
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	data	int	0成功1失败
+===================================================================================
+
+2、接口url：appOrder/searchGood
+功能描述：查询该会员品类下的商品
+入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	categoryId	string	分类
+	pageno	int	1
+	pagesize	int	2
+	goodStatus	string	启用状态0
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本	
+	mtCount	int	总条数
+	mtList list<map>	：
+		imgPath	string	图片地址
+		name	string	商品名
+		factory	string	生产厂家
+		productNum	string	生产编号
+		minPrice	string	最低单价
+		maxPrice	string	最高单价
+
+===================================================================================
+
+新建订单
+
+
+接口url：appOrder/queryMyPendingOrder
+功能描述：取新建订单列表（本方新创建，等对方审批）
+入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	categoryId	string	分类
+	pageno	int	1
+	pagesize	int	2
+	name	string	交易双方
+	orderId	string	订单号
+	status	int	订单类型（1全部2采购3销售）
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	rows	list<map>	订单list
+		id	string	订单id
+		ordertitleCode	string	订单号
+		totalMoney	double	总金额	
+		createTime	string	创建时间
+		buyersId	string	等于当前登录人就是sellersName  else buyersName
+		buyersName	string	买方名称
+		sellersName	string	卖方名称
+===================================================================================
+
+待审批订单
+1、接口url：appOrder/appOrderList
+功能描述：待审批订单列表
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	name	string	交易双方
+	orderId	string	订单号
+	status	string	订单类型
+	pageno	int	页开始行
+	pagesize	int	页行数
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	rows	list<map>	订单list
+		Total	int	总条数
+		Rows	json	数据list 
+		id	string	数据的订单号
+		SellersName	string	卖方名字
+		BuyersName	string	买房名字
+		totalMoney	string	总金额
+		createTime	string	创建时间
+===================================================================================
+
+接口url：appOrder/appOrderEditOrder
+功能描述：订单编辑提交
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	id	string	订单id
+	buyersId	string	买方id
+	sellersId	string	卖方id
+	param（实体）
+		orderList
+			id	string	订单id
+			buyersId	string	买方id
+			buyersName	string	买方名字
+			categoryId	string	分类id
+			goodsId	string	商品id
+			goodsNum	int	数量
+			money	double	总钱数
+			price	double	单价
+			quoteId	string	报价id
+			sellersId	string	卖方id
+			sellerName	string	卖方名字
+			categoryId	string	品类id
+			goodsNum	double	商品数量
+			money	double	总钱数
+			price	double	单价
+			quoteId	string	报价id
+			getgoodsNum	double	商品数量
+		buyersAddressId
+		buyersAddressName	string	买方地址
+		buyerName	string	买方名字
+		executeEndTime	string	执行最晚时间
+		executeStartTime	string	执行最早时间
+		getAccount	string	卖方账号
+		getBank	string	卖方银行
+		payAccount
+		payBank	支付银行
+		payTime	支付时间
+		sellerAddressId	卖方地址id
+		sellerAddressName	string	卖方地址名称
+		sellerName	string	卖方名称
+		totalMoney	double	总金额
+		workflowTypeId	int	订单流程（1货款两清2先货后款3先货后款已交货4先款后货5先款后货已收款）
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+
+===================================================================================
+
+2、接口url：appOrder/appOrderCheckOrder
+功能描述：订单查询详情（所有出订单详情和订单编辑页面都用这个）
+	入口参数：
+	sys_token string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	orderId	string	订单号
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本		Result	string	结果提示文本
+	Ordertitle	list	订单信息
+	buyersName	string	买方名字
+	buyersId	string	买方id
+	sellersName	string 卖方名字
+	workflowTypeId	string	流程状态	1货款两清，2先货后款，3先货后款已交货，4先款后货，5先款后货已交款
+	orderStatus	int	类型	buyersId== memberId orderstatus就是采购 卖方 否则相反
+	ordertitleCode	string	订单号
+	lockTime	string	签约时间
+	totalMoney string	总金额
+	payTime	string	付款时间
+	executeStartTime	string	送货开始时间
+	payBank	string	银行名称（支付）
+	payAccount	string	银行账号（支付）
+	getBank	string	银行名称（收款）
+	getAccount	string	银行账号（收款）
+	sellersAddressName	string	收货地址
+	buyersAddressName 	string	发货地址	data	商品list
+	goodsName	string	商品名
+	money 	string	金额
+	price	double	单价
+	goodsNum	double	数量
+	exeSendgoodsNum 	double	待发货数量
+	exeReturngoodsNum	 double	实际发货数量
+	exePaymoneyNum 	double	待付款金额
+	exeRefundNum 	double	实际付款金额
+===================================================================================
+	
+4、接口url：appOrder/appOrderLockOrder
+功能描述：订单锁定操作
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	param	string	实体
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+===================================================================================
+
+5、接口url：appOrder/appOrderAbolishOrder
+功能描述：订单作废操作
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	param	string	实体
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+===================================================================================
+
+接口url：appOrder/queryOrderManage
+功能描述：取执行中订单列表
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	orderId	string	订单id
+	executeStatus	int	订单执行状态
+	name	string	对方名称
+	status	int	订单类型
+	startTime	string	签约开始时间
+	endTime	string	签约结束时间
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	total	总条数
+	rows：
+		ordertitleCode	string	订单号
+		id	string	订单id
+		buyersId	string	买方id
+		buyersName	string	买方名字
+		sellersName	string	卖方名字
+		totalMoney	double	总金额
+		lockTime	string	签约时间
+		executeStatus	int	状态（1执行中else执行结束）
+===================================================================================
+
+接口url：appOrder/stopOrder
+功能描述：请求中止操作
+	入口参数：
+	sys_token	string	令牌号
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_name	string	用户名
+	sys_member	string	会员id
+	id	string	订单id
+	StopStatus	int	操作（2请求中止else3 1撤销中止，4同意终止）
+	list：
+		stopStatus	integer	拒绝状态1请求中止2同意3撤回
+		executeStatus	integer	执行状态 0全部1执行中2已完成	
+		finishTime	string	完成时间
+		buyersId	string	买房id
+返回参数：Map结构的JSON字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误
+	return_message	string	结果提示文本
+	msg	string	操作成功或失败

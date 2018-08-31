@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+  <div id="app">
+    <el-button @click="visible = true">Button</el-button>
+    <el-dialog :visible.sync="visible" title="Hello world">
+      <p>Try Element</p>
+    </el-dialog>
+  </div>
+</body>
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { visible: false }
+
+      },
+      mounted: function(){
+        this.query();
+      },
+      methods: {
+        query: function(){
+          axios.post('http://localhost:8080/v2/rewardController/queryTotalRewardList.do')
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        }
+      }
+    })
+  </script>
+</html>
+
+
+张单单：
+  支付系统
+      银企直联支付流程的设计开发维护
+  资金管理
+      财务，订单两个系统涉及到的资金业务集中处理
+      资金冻结，提现，查看交易流水等
+  商城
+      原有功能的升级维护，新增功能的开发（实现C端的推广功能后台接口部分）
+  成本核算
+      完成成本核算设计开发工作

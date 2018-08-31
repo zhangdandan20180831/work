@@ -1,0 +1,940 @@
+===================================================
+============业务合作会员目录=======================
+===================================================
+接口url：/getRelaMmbs
+http://192.168.0.120:8081/v2/appMemberRelationship/getRelaMmbs.app?param={}
+功能描述：进入当前会员的会员合作目录，获取不同合作业务类型的会员列表
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功，，1 失败
+	return_message	string	结果提示文本
+	list：返回的本页数据
+	     map{
+		    key	string	buztype业务类型（买  卖）
+			value	list<map>	对应类型的会员列表：{
+				relation_member string 会员id
+				fname string 会员名称
+			}
+		 }
+		 
+参数示例：
+1，请求参数		 
+param=
+	{
+    "sys_func": "100000",
+    "sys_uuid": "00009",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_member": "testshop001",
+    "sys_token": "66666666666666666666666666"
+    }
+2，返回参数
+{
+    "list": [
+        {
+            "买": [
+                {
+                    "fname": "北京交通大学",
+                    "memberId": "d5d1244c85d5478ca88a253b509f8bed"
+                },
+                {
+                    "fname": "天美贸易公司",
+                    "memberId": "55da4721cd7049e186a17745a795a6cd"
+                }
+            ]
+        },
+        {
+            "卖": [
+                {
+                    "fname": "北京交通大学",
+                    "memberId": "d5d1244c85d5478ca88a253b509f8bed"
+                },
+                {
+                    "fname": "天美贸易公司",
+                    "memberId": "55da4721cd7049e186a17745a795a6cd"
+                }
+            ]
+        }
+    ],
+    "return_code": 0,
+    "return_message": "成功!"
+}
+==================================================
+接口url：/getMmbbymid
+http://192.168.0.120:8081/v2/appMemberRelationship/getMmbbymid.app?param={}
+功能描述：根据点击的会员id获取会员信息（包括与合作会员的业务关系是否启用）
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+    
+	relation_member	string	点击的会员id
+    type	    string	传固定值"1"
+    buztype	string	是买还是卖的关系 0：买 1：卖 2：借 3：贷
+
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功，
+	return_message	string	结果提示文本
+	data	map{返回查询的对象信息(map)
+	    mmbfname 	string 会员名称
+		mmbaddress  string 会员地址
+		mmbhomepage string 会员主页
+		sellbiz     string 卖的关系{0 停用 1 启用} 
+		buybiz      string 买的关系{0 停用 1 启用} 
+参数示例：
+1，请求参数		 
+param={
+    "sys_func": "100000",
+    "sys_uuid": "00009",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_member": "testshop001",
+    "sys_token": "66666666666666666666666666",
+    "type": "1",
+    "buztype": "0",
+    "relation_member": "55da4721cd7049e186a17745a795a6cd"
+	}
+2，返回参数
+{
+    "data": {
+        "buyBiz": "0",
+        "mmbaddress": "北京小树林",
+        "mmbfname": "天美贸易公司",
+        "mmbhomepage": "http://members.nxdj.org.cn/天美商行.html",
+        "sellBiz": "0"
+    },
+    "return_code": 0,
+    "return_message": "成功!"
+}		
+==================================================
+接口url：/openBizRelationship
+http://192.168.0.120:8081/v2/appMemberRelationship/openBizRelationship.app?param={}
+功能描述：启用当前会员与合作会员的采购或者销售业务。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+    
+	relation_member	string	合作的会员id
+	type		string	固定值{我能采购：1，我能销售：2}
+
+返回参数：map结构的json字串
+	return_code	int	结果码，0 启用成功!待对方审批通过后即可使用！，
+	return_message	string	结果提示文本
+
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "type": "1",
+    "relation_member": "55da4721cd7049e186a17745a795a6cd"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "启用成功!待对方审批通过后即可使用！"
+}
+===================================================
+接口url：/stopBizRelationship
+http://192.168.0.120:8081/v2/appMemberRelationship/stopBizRelationship.app?param={}
+功能描述：停用当前会员与合作会员的采购或者销售业务。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+    
+	relation_member	string	合作的会员id
+	type		string	固定值{我能采购：1，我能销售：2}
+
+返回参数：map结构的json字串
+	return_code	int	结果码，0 停用成功，
+	return_message	string	结果提示文本
+	
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "type": "1",
+    "relation_member": "55da4721cd7049e186a17745a795a6cd"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "停用成功!"
+}
+===================================================
+接口url：/lowerToConcernOperation
+http://192.168.0.120:8081/v2/appMemberRelationship/lowerToConcernOperation.app?param={}
+功能描述：降级为关注。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+    
+	relation_member	string	合作的会员id
+
+返回参数：map结构的json字串
+	return_code	int	结果码，0 降级成功， 1降级失败
+	return_message	string	结果提示文本	    
+
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "type": "1",
+    "relation_member": "55da4721cd7049e186a17745a795a6cd"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}
+===================================================
+================关注会员目录=======================
+===================================================
+接口url：/queryMMBConcerns
+http://192.168.0.120:8081/v2/appMemberRelationship/queryMMBConcerns.app?param={}
+功能描述：获取关注会员列表
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	grade  		string  关注等级
+	pageno		int	页号
+	pagesize	int	页行数 
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功， 1 失败
+	return_message	string	结果提示文本
+	pagecount	int	符合条件记录总页数	
+	list：返回关注会员列表信息
+	      relationship_id  string 关系ID
+		  mark_member string 关注的会员id
+	      mmbfName	  string 会员名称
+		  mmbaddress  string 会员地址
+		  mmbhomepage string 会员主页
+		  relagrade   string 关注等级
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "pageno": "1",
+    "pagesize": "10"
+}
+2，返回参数
+{
+    "list": [
+        {
+            "mark_member": "46e7ffa51761499e905a10f1a33ec450",
+            "mmbaddress": "北京市朝阳区亚运村路18号",
+            "mmbfName": "APP测试用企业",
+            "mmbhomepage": "",
+            "relagrade": 3,
+            "relationship_id": "dee77a3624e2473c90e8a2e3d04ff701"
+        },
+        {
+            "mark_member": "da4383de72494f5d98dc7836d25f526f",
+            "mmbaddress": "",
+            "mmbfName": "cyh",
+            "mmbhomepage": "http://members.nxdj.org.cn/cyh.html",
+            "relagrade": 1,
+            "relationship_id": "c46f2d0f3cbc40418552e8763c629660"
+        },
+        {
+            "mark_member": "d5d1244c85d5478ca88a253b509f8bed",
+            "mmbaddress": "北京海淀",
+            "mmbfName": "北京交通大学",
+            "mmbhomepage": "",
+            "relagrade": 1,
+            "relationship_id": "085fc922c80848508570dd5aacc72fc1"
+        },
+        {
+            "mark_member": "5c23a03df5dd4d4f95b3dff6ad057e9f",
+            "mmbaddress": "北京",
+            "mmbfName": "北京美日鲜农场",
+            "mmbhomepage": "http://members.nxdj.org.cn/美日鲜农场.html",
+            "relagrade": 1,
+            "relationship_id": "42b18f0954d3475383476196021d6720"
+        },
+        {
+            "mark_member": "a9c1512052164391ab1fcc2ffa67b0ec",
+            "mmbaddress": "北京市朝阳区安立路25号",
+            "mmbfName": "北京试用的学校",
+            "mmbhomepage": "",
+            "relagrade": 1,
+            "relationship_id": "4c038dba7b144e07972ca46435c693c1"
+        },
+        {
+            "mark_member": "459f3498633d4952a293dc360e2b7c97",
+            "mmbaddress": "北京",
+            "mmbfName": "天坛学院",
+            "mmbhomepage": "http://106.2.221.174:2000/v2content/mmbhtml/天坛学院.html",
+            "relagrade": 1,
+            "relationship_id": "10b3f4d9411f49fcafa974f429fb982f"
+        },
+        {
+            "mark_member": "55da4721cd7049e186a17745a795a6cd",
+            "mmbaddress": "北京小树林",
+            "mmbfName": "天美贸易公司",
+            "mmbhomepage": "http://members.nxdj.org.cn/天美商行.html",
+            "relagrade": 1,
+            "relationship_id": "df050732fe9e48c7ac6d67b85a46627e"
+        }
+    ],
+    "pagecount": 7,
+    "return_code": 0,
+    "return_message": "成功!"
+}	  
+===================================================
+接口url：/changeConcernGrade
+http://192.168.0.120:8081/v2/appMemberRelationship/changeConcernGrade.app?param={}
+功能描述：改变关注等级。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	relationship_id		string  关系ID
+	grade  		string  关注等级（改变后等级）
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功， 1 失败
+	return_message	string	结果提示文本	
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "relationship_id": "df050732fe9e48c7ac6d67b85a46627e",
+    "grade": "2"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}	
+===================================================
+接口url：/toUpgradebizOperation
+http://192.168.0.120:8081/v2/appMemberRelationship/toUpgradebizOperation.app?param={}
+功能描述：升级到业务合作。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	mark_member	string	关注的会员id
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功， 1 失败
+	return_message	string	结果提示文本	
+	data：返回合作关系
+		sellbiz     string 卖的关系{0 停用 1 启用} 
+		buybiz      string 买的关系{0 停用 1 启用}
+
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "mark_member": "55da4721cd7049e186a17745a795a6cd"
+}
+2，返回参数
+{
+    "data": {
+        "buyBiz": "0",
+        "sellBiz": "1"
+    },
+    "return_code": 0,
+    "return_message": "成功!"
+}		
+===================================================	
+接口url：/cancelConcern
+http://192.168.0.120:8081/v2/appMemberRelationship/cancelConcern.app?param={}
+功能描述：取消关注。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	relationship_id		string  关系ID
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功， 1 失败
+	return_message	string	结果提示文本
+
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "relationship_id": "10b3f4d9411f49fcafa974f429fb982f"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}	
+===================================================
+================待审批申请=========================
+===================================================
+接口url：/queryMmbRelationships
+http://192.168.0.120:8081/v2/appMemberRelationship/queryMmbRelationships.app?param={}
+功能描述：待审批的合作关系建立申请列表。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	pageno		int	页号
+	pagesize	int	页行数 
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功， 1 失败
+	return_message	string	结果提示文本
+	pagecount	int	符合条件记录总页数
+	list：返回的本页数据
+		fname      string  会员名称
+		biz_type   string  业务关系
+		relationship_id		string  关系ID
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "55da4721cd7049e186a17745a795a6cd",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "pageno": "1",
+    "pagesize": "10"
+}
+2，返回参数
+{
+    "list": [
+        {
+            "biz_type": "向我采购",
+            "fname": "长城商行",
+            "relationship_id": "d3531e076f9349feb07cf151c85f31a6"
+        }
+    ],
+    "pagecount": 1,
+    "return_code": 0,
+    "return_message": "成功!"
+}	
+===================================================
+接口url：/verifyMmbRelationship
+http://192.168.0.120:8081/v2/appMemberRelationship/verifyMmbRelationship.app?param={}
+功能描述：同意拒绝业务关系申请操作的处理。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	relationship_id		string  关系ID 
+	type        string  固定值{同意 0 拒绝 1}
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功， 1 失败
+	return_message	string	结果提示文本
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "55da4721cd7049e186a17745a795a6cd",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "relationship_id": "c017be772cb142e3882a2c3fefa94677",
+    "type": "0"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}	
+===================================================
+================群组管理===========================
+===================================================
+接口url：/queryGroupMan
+http://192.168.0.120:8081/v2/appMemberRelationship/queryGroupMan.app?param={}
+功能描述：获取群组列表。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	group_name  string  群组名称
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功， 1 失败
+	return_message	string	结果提示文本	
+	list：返回群组列表信息
+	      group_id     string 群组ID
+	      group_name     string 群组名称
+		  group_status   string 群组状态（1-->申请中 
+										  2-->已加入 
+										  0-->未加入）
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "group_name": ""
+}
+2，返回参数
+{
+    "list": [
+        {
+            "groupName": "广东高校群",
+            "groupStatus": 1,
+            "id": "gd001",
+            "remark": "1"
+        },
+        {
+            "groupName": "广东教育厅认证供应商",
+            "groupStatus": 1,
+            "id": "gd002",
+            "remark": "1"
+        },
+        {
+            "groupName": "广东教育厅认证生产商",
+            "groupStatus": 1,
+            "id": "gd003",
+            "remark": "1"
+        },
+        {
+            "groupName": "广东中学群",
+            "groupStatus": 1,
+            "id": "gd004",
+            "remark": "1"
+        },
+        {
+            "groupName": "测试群",
+            "groupStatus": 1,
+            "id": "gd005",
+            "remark": "1"
+        },
+        {
+            "groupName": "云南高校",
+            "groupStatus": 1,
+            "id": "yn010",
+            "remark": "1"
+        },
+        {
+            "groupName": "云南教育厅认证供应商",
+            "groupStatus": 1,
+            "id": "yn030",
+            "remark": "1"
+        },
+        {
+            "groupName": "云南教育厅帮扶合作社",
+            "groupStatus": 1,
+            "id": "yn050",
+            "remark": "1"
+        },
+        {
+            "groupName": "云南教育厅直供基地",
+            "groupStatus": 1,
+            "id": "yn031",
+            "remark": "1"
+        }
+    ],
+    "return_code": 0,
+    "return_message": "成功!"
+}
+===================================================
+接口url：/adduserforGroup
+http://192.168.0.120:8081/v2/appMemberRelationship/adduserforGroup.app?param={}
+功能描述：获取群组列表。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	group_id    string  群组ID
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功， 1 失败
+	return_message	string	结果提示文本	
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "group_id": "yn010"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}		
+===================================================
+接口url：/deleteUserforGroup
+http://192.168.0.120:8081/v2/appMemberRelationship/deleteUserforGroup.app?param={}
+功能描述：获取群组列表。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	group_id    string  群组ID
+	 
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功， 1 失败
+	return_message	string	结果提示文本	
+	
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "group_id": "yn010"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}
+===================================================
+================（新增功能）=====================
+===================================================		
+接口url：/getAllMember
+http://192.168.0.120:8081/v2/appMemberRelationship/getAllMember.app?param={}					  
+功能描述：查询所有供应商（学校专用）。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	goods_catergory   string   商品分类
+	member_name       string   企业名称
+	province		  string   省份
+	pageno		int	页号
+	pagesize	int	页行数 
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功， 1 失败
+	return_message	string	结果提示文本
+	
+	pagecount	int	符合条件记录总页数
+	
+	list：返回的本页数据
+	     member_id    string     企业会员ID
+		 member_name  string     企业会员名称
+		 mmbhomepage  string     会员主页
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "pageno": "1",
+    "pagesize": "10",
+    "goods_catergory": "",
+    "member_name": "",
+    "province": ""
+}
+2，返回参数
+{
+    "list": [
+        {
+            "member_id": "testshop001",
+            "member_name": "长城商行",
+            "mmbhomepage": "http://members.nxdj.org.cn/GreatWall.html"
+        },
+        {
+            "member_id": "c35e4315f7804f52b27e403a812deec6",
+            "member_name": "新美农业合作社",
+            "mmbhomepage": "http://members.nxdj.org.cn/新美农场.html"
+        },
+        {
+            "member_id": "8ef4c05d52eb4e33863fd79411b0daf2",
+            "member_name": "国米贸易公司",
+            "mmbhomepage": ""
+        },
+        {
+            "member_id": "55da4721cd7049e186a17745a795a6cd",
+            "member_name": "天美贸易公司",
+            "mmbhomepage": "http://members.nxdj.org.cn/天美商行.html"
+        },
+        {
+            "member_id": "9c90dbd4432b403e90d307ecff5919b6",
+            "member_name": "北京天天水产公司",
+            "mmbhomepage": "http://106.2.221.174:2000/v2content/mmbhtml/天天水产.html"
+        },
+        {
+            "member_id": "d710adbcefdf45d0a0e4a83810b65514",
+            "member_name": "昭通山村扶贫合作社",
+            "mmbhomepage": ""
+        },
+        {
+            "member_id": "xfdwlpszx",
+            "member_name": "北京新发地农产品网络配送中心有限责任公司",
+            "mmbhomepage": ""
+        },
+        {
+            "member_id": "56f926568caa40ddadc4afe49616a276",
+            "member_name": "北京久九元丰商贸有限公司",
+            "mmbhomepage": "http://106.2.221.174:2000/v2content/mmbhtml/北京久九元丰.html"
+        },
+        {
+            "member_id": "f2d07ff624294ca688c588d316c00dda",
+            "member_name": "北京世纪悦福食品有限公司",
+            "mmbhomepage": "http://106.2.221.174:2000/v2content/mmbhtml/北京世纪悦福.html"
+        },
+        {
+            "member_id": "64c68f10ceb24c54848caa279119495b",
+            "member_name": "北京易水恒商贸有限公司",
+            "mmbhomepage": "http://106.2.221.174:2000/v2content/mmbhtml/北京易水恒.html"
+        }
+    ],
+    "pagecount": 19,
+    "return_code": 0,
+    "return_message": "成功!"
+}
+===================================================		
+接口url：/markMember
+http://192.168.0.120:8081/v2/appMemberRelationship/markMember.app?param={}
+功能描述：关注选中的供应商。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	member_ids     string   选中的会员ID（逗号分隔）
+返回参数：map结构的json字串
+	return_code	    int	    结果码，0 成功， 1 失败
+	return_message	string	结果提示文本（2已关注，1关注成功）
+	
+	success_num     int  关注成功数量
+	failed_num      int  关注失败数量
+	marked_num      int  已关注数量
+
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "member_ids": "64c68f10ceb24c54848caa279119495b,f2d07ff624294ca688c588d316c00dda,56f926568caa40ddadc4afe49616a276"
+}
+2，返回参数
+{
+    "failed_num": 0,
+    "marked_num": 0,
+    "return_code": 0,
+    "return_message": "成功",
+    "success_num": 3
+}
+===================================================		
+接口url：/createCooperators
+http://192.168.0.120:8081/v2/appMemberRelationship/createCooperators.app?param={}
+功能描述：和选中的供应商建立业务合作关系。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	member_ids     string   选中的会员ID（逗号分隔）
+	biz_type	int	业务关系类型：2销售 1采购
+返回参数：map结构的json字串
+	return_code	    int	    结果码，0 成功， 1 失败
+	return_message	string	结果提示文本（2已关注，1关注成功）	
+	
+	success_num     int  建立业务合作关系成功数量
+	failed_num      int  建立业务合作关系失败数量
+	marked_num      int  已建立业务合作关系数量
+	
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "member_ids": "64c68f10ceb24c54848caa279119495b,f2d07ff624294ca688c588d316c00dda,56f926568caa40ddadc4afe49616a276",
+    "biz_type": "1"
+}
+2，返回参数
+{
+    "failed_num": 0,
+    "marked_num": 0,
+    "return_code": 0,
+    "return_message": "成功",
+    "success_num": 3
+}
+===================================================		
+接口url：/getAllMarkedMeMembers
+http://192.168.0.120:8081/v2/appMemberRelationship/getAllMarkedMeMembers.app?param={}
+功能描述：查询关注我的会员列表（企业专用）。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	
+	member_name       string   会员名称
+	province		  string   省份
+	pageno		int	页号
+	pagesize	int	页行数 
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功， 1 失败
+	return_message	string	结果提示文本
+	
+	pagecount	int	符合条件记录总页数
+	
+	list：返回的本页数据
+	     member_id    string     企业会员ID
+		 member_name  string     企业会员名称
+		 mmbhomepage  string     会员主页	
+		 
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "pageno": "1",
+    "pagesize": "10",
+    "member_name": "新美农业合作社",
+    "province": ""
+}
+2，返回参数
+{
+    "list": [
+        {
+            "member_id": "c35e4315f7804f52b27e403a812deec6",
+            "member_name": "新美农业合作社",
+            "mmbhomepage": "http://members.nxdj.org.cn/新美农场.html"
+        }
+    ],
+    "pagecount": 1,
+    "return_code": 0,
+    "return_message": "成功!"
+}
+===================================================	
+
+接口URL
+		 http://localhost:8080/v2/appMemberRelationship/getMmbByUrl.app
+功能描述
+     根据会员主页查询会员信息
+入口参数：map结构的json字串
+		 sys_token	string	令牌号	
+		 sys_uuid	string	操作唯一编码（防重复提交）
+		 sys_func	string	功能编码（用于授权检查）
+		 sys_user	string	用户id
+		 sys_member	string	会员id
+      
+	   mmbHomePage  string 会员主页
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功， 999未知异常 ，99参数为空 ，105 不是合法会员主页
+	return_message	string	结果提示文本
+	data 
+	     mmbId    string     企业会员ID
+		   mmbFName  string     企业会员名称
+		   mmbAddress  string     会员地址	
+参数示例：
+1，请求参数
+http://localhost:8080/v2/appMemberRelationship/getMmbByUrl.app?
+param={
+  "sys_member" : "testshop001",
+  "sys_uuid" : "00003",
+  "sys_token" : "os7e45c31bi5820e",
+  "sys_user" : "475814ffe832455dba6ecdf4306b3642",
+  "sys_func" : "111",
+  "mmbHomePage" : "http://members.nxdj.org.cn/GreatWall.html"
+}
+
+
+2，返回参数
+{
+    "data": {
+        "mmbAddress": "北京市怀柔区渤海镇",
+        "mmbFName": "长城商行",
+        "mmbId": "testshop001"
+    },
+    "return_code": 0,
+    "return_message": "成功"
+}
+查不到会员信息返回结果
+{
+    "return_code": 105,
+    "return_message": "不是合法会员主页"
+}

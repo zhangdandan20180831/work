@@ -1,0 +1,1082 @@
+
+===================================================
+接口url：/toAddContractPage
+http://192.168.0.120:8081/v2/appContract/toAddContractPage.app?param={}
+功能描述：到创建协议页面需要的信息（获取相关信息，地址列表，银行列表）。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+    
+	relation_member	string	合作的会员id
+	buztype	string	是买还是卖的关系 0：买 1：卖 2：借 3：贷
+
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误 1 失败
+	return_message	string	结果提示文本
+	data	map	返回界面展示信息{
+		contract_type    string  协议类型
+		buy_mmb_id       string  会员ID（买方）
+		sell_mmb_id      string  会员ID（卖方）
+		buy_membername   string  会员名称（采购方）
+		sell_membername  string  会员名称（供货方）
+		workername       string  操作员名称（协议对方）--------------------------不传了APP端自己获取当前登录用户的用户名
+		addresslist      list    地址列表{id 地址ID address 地址}
+		banklist         list    银行列表{accountno 银行账号 bankname 银行名称}
+    
+    业务字典说明：
+		结款规则
+		<option value="0">每月</option>
+		<option value="1">每季</option>
+		<option value="2">6个月</option>
+		<option value="3">每年</option>
+		<option value="4">其他</option>	
+		
+		发货规则
+		<option value="0">自取</option>
+        <option value="1">免费配送</option>
+        <option value="2">有偿配送（1%）</option>
+		
+		运输方式
+		<option value="0">行运</option>
+        <option value="1">空运</option>
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "contract_type": "1",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "relation_member": "55da4721cd7049e186a17745a795a6cd",
+    "buztype": "1"
+}
+2，返回参数
+{
+    "addresslist": [
+        {
+            "address": "高宇",
+            "contact": "",
+            "id": "1472e8f1776c41d7b20133c676eb9aca",
+            "mmbId": "testshop001",
+            "mobilephone": "",
+            "phone": "",
+            "zipcode": ""
+        },
+        {
+            "address": "Beijing",
+            "contact": "Gaoyu",
+            "id": "388f41ee44b04aeea3640140f91f380e",
+            "mmbId": "testshop001",
+            "mobilephone": "",
+            "phone": "",
+            "zipcode": ""
+        }
+    ],
+    "banklist": [
+        {
+            "accountname": "高于",
+            "accountno": "123214453454",
+            "bankname": "中国银行",
+            "contact": "高于",
+            "id": "ebdb64c130624557bb67324bf0d04cf2",
+            "mmbId": "testshop001",
+            "mobilephone": "213442351",
+            "phone": ""
+        },
+        {
+            "accountname": "高于",
+            "accountno": "6222189929039864012",
+            "bankname": "中国建设银行",
+            "contact": "北京",
+            "id": "fc992fffb07442339239a25c521b7ed5",
+            "mmbId": "testshop001",
+            "mobilephone": "",
+            "phone": "18022002299"
+        }
+    ],
+    "buy_membername": "长城商行",
+    "buy_mmb_id": "testshop001",
+    "contract_type": "1",
+    "return_code": 0,
+    "return_message": "成功!",
+    "sell_membername": "天美贸易公司",
+    "sell_mmb_id": "55da4721cd7049e186a17745a795a6cd"
+}
+===================================================
+接口url：/creatCTR
+http://192.168.0.120:8081/v2/appContract/creatCTR.app?param={}
+功能描述：保存合作协议：合作协议编辑完成确认提交处理。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	goods           string  所有选中的商品ID（逗号分隔）
+	
+	buy_mmb_id      string  甲方会员ID（买方）
+	sell_mmb_id     string  乙方会员ID（卖方）
+	
+	contract_title  string  标题
+	user_time       string  有效期（2017-04-11 - 2017-06-12）
+	pay_type        string  结款规则
+	flow_type  		string  发货规则
+	sendgoods_type  string  运输方式
+	
+	payer_code		string  付款账号
+	payer_name		string  付款行名称
+	getmoney_code   string  收款账号
+	getmoney_name   string  收款行名称
+	sendgoods_address string 发货地址
+	getgoods_address  string 收货地址
+	note            string 备注
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误 1 失败
+	return_message	string	结果提示文本
+
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "buztype": "1",
+    "goods": "1001002002,1001004001",
+    "user_time": "2017-05-16 - 2017-05-16",
+    "flow_type": "0",
+    "sendgoods_type": "0",
+    "pay_type": "0",
+    "payer_code": "123214453454",
+    "payer_name": "中国银行",
+    "getmoney_code": "",
+    "getmoney_name": "",
+    "getgoods_address": "高宇",
+    "sendgoods_address": "",
+    "buy_mmb_id": "testshop001",
+    "sell_mmb_id": "55da4721cd7049e186a17745a795a6cd",
+    "contract_title": "2222",
+    "note": "备注"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}
+===================================================
+================查询合作协议=======================
+===================================================		
+接口url：/queryContractByPageType
+http://192.168.0.120:8081/v2/appContract/queryContractByPageType.app?param={}
+功能描述：获取合作协议列表。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	pageno			int	页号
+	pagesize		int	页行数 
+	pagetype    	string  协议状态（pending:待审批 submit:已提交 running：执行中）
+	contract_type 	string 	协议类型（采购 1，销售 2）
+	name 			string 	协议对方名称
+	
+	contract_status		string      协议状态（执行中，已终止）
+	
+返回参数：map结构的json字串
+	return_code	    int	    结果码，0 成功，101 无权限，201 数据库错误 1 失败
+	return_message	string	结果提示文本
+	pagecount	    int	    符合条件记录总页数
+    list：返回的本页数据
+	    contract_id         string      协议ID
+		buy_mmb_id          string      买方会员ID
+		contract_title  	string   	协议标题
+		mmbname				string		协议对方
+		start_time			string      开始时间
+		end_time			string		结束时间
+		pay_type			string		付款期（直接返回文字描述）
+		flow_type			string		运输方式（直接返回文字描述）
+		contract_status		string      协议状态
+		
+参数示例：
+------------已提交合作协议--------------------------
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "contract_status": "",
+    "contract_type": "1",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "name": "",
+    "sys_uuid": "00033",
+    "pagetype": "submit",
+    "pageno": "1",
+    "pagesize": "10"
+}
+2，返回参数
+{
+    "list": [
+        {
+            "buy_mmb_id": "testshop001",
+            "contract_id": "877d0f200dec402c8f90db286c53cbf4",
+            "contract_status": 1,
+            "contract_title": "111111",
+            "end_time": 1494864000000,
+            "flow_type": "自取",
+            "mmbname": "天美贸易公司",
+            "pay_type": "每月",
+            "start_time": 1494864000000
+        }
+    ],
+    "pagecount": 1,
+    "return_code": 0,
+    "return_message": "成功!"
+}    
+------------待审批合作协议--------------------------
+1，请求参数		 
+param={
+    "sys_member": "55da4721cd7049e186a17745a795a6cd",
+    "sys_func": "1212",
+    "contract_status": "",
+    "contract_type": "2",
+    "sys_token": "1212",
+    "sys_user": "b0611042cbcd40e1a3b911eb6f21a685",
+    "name": "",
+    "sys_uuid": "00033",
+    "pagetype": "pending",
+    "pageno": "1",
+    "pagesize": "10"
+}
+2，返回参数
+{
+    "list": [
+        {
+            "buy_mmb_id": "testshop001",
+            "contract_id": "9929b4a49ff843ed8bb94a867926c6e2",
+            "contract_status": 1,
+            "contract_title": "2222",
+            "end_time": 1494864000000,
+            "flow_type": "自取",
+            "mmbname": "长城商行",
+            "pay_type": "每月",
+            "start_time": 1494864000000
+        },
+        {
+            "buy_mmb_id": "testshop001",
+            "contract_id": "877d0f200dec402c8f90db286c53cbf4",
+            "contract_status": 1,
+            "contract_title": "111111",
+            "end_time": 1494864000000,
+            "flow_type": "自取",
+            "mmbname": "长城商行",
+            "pay_type": "每月",
+            "start_time": 1494864000000
+        }
+    ],
+    "pagecount": 2,
+    "return_code": 0,
+    "return_message": "成功!"
+} 
+------------执行中合作协议--------------------------
+1，请求参数		 
+param={
+    "sys_member": "55da4721cd7049e186a17745a795a6cd",
+    "sys_func": "1212",
+    "contract_status": "3",
+    "contract_type": "2",
+    "sys_token": "1212",
+    "sys_user": "b0611042cbcd40e1a3b911eb6f21a685",
+    "name": "",
+    "sys_uuid": "00033",
+    "pagetype": "running",
+    "pageno": "1",
+    "pagesize": "10"
+}
+2，返回参数
+{
+    "list": [
+        {
+            "buy_mmb_id": "testshop001",
+            "contract_id": "9929b4a49ff843ed8bb94a867926c6e2",
+            "contract_status": 3,
+            "contract_title": "2222",
+            "end_time": 1494864000000,
+            "flow_type": "自取",
+            "mmbname": "长城商行",
+            "pay_type": "每月",
+            "start_time": 1494864000000
+        }
+    ],
+    "pagecount": 1,
+    "return_code": 0,
+    "return_message": "成功!"
+}
+===================================================		
+接口url：/toContractDetailPage
+http://192.168.0.120:8081/v2/appContract/toContractDetailPage.app?param={}
+功能描述：查看协议详情。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	contract_id         string      协议ID
+	contract_type		string      协议类型
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误 1 失败
+	return_message	string	结果提示文本	
+    data：返回查询的对象信息
+		contract_type	 string  协议类型
+		buy_membername   string  会员名称（采购方）
+		sell_membername  string  会员名称（供货方）
+		
+		contract_title  string  标题
+		operate_user    string  操作人
+		operate_time    string  操作时间（2017-04-27  16:48:06）
+		user_time       string  有效期（2017-04-11 - 2017-06-12）
+		pay_type        string  结款规则
+		flow_type  		string  发货规则
+		sendgoods_type  string  运输方式
+	
+		payer_code		string  付款账号
+		payer_name		string  付款行名称
+		getmoney_code   string  收款账号
+		getmoney_name   string  收款行名称
+		sendgoods_address string 发货地址
+		getgoods_address  string 收货地址
+		
+		goods		      list 已选商品列表
+		
+		note            string 备注
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "contract_type": "1",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "contract_id": "877d0f200dec402c8f90db286c53cbf4"
+}
+2，返回参数
+{
+    "data": {
+        "buy_membername": "长城商行",
+        "contract_title": "111111",
+        "contract_type": "1",
+        "getgoods_address": "1472e8f1776c41d7b20133c676eb9aca",
+        "getmoney_code": "",
+        "getmoney_name": "",
+        "goods": [
+            {
+                "categoryName": "散装大米",
+                "ctgId": "1001002002",
+                "ctrId": "877d0f200dec402c8f90db286c53cbf4",
+                "id": "00474fc0b45f4187a44accb9dd8f914b"
+            },
+            {
+                "categoryName": "瓶装油",
+                "ctgId": "1001004001",
+                "ctrId": "877d0f200dec402c8f90db286c53cbf4",
+                "id": "1d25ad309b5c4af99831b9f132046395"
+            }
+        ],
+        "note": "备注",
+        "operate_time": 1494914890000,
+        "operate_user": "475814ffe832455dba6ecdf4306b3642",
+        "payer_code": "123214453454",
+        "payer_name": "中国银行",
+        "sell_membername": "天美贸易公司",
+        "sendgoods_address": "",
+        "user_time": "2017-05-16 - 2017-05-16"
+    },
+    "return_code": 0,
+    "return_message": "成功!"
+}
+===================================================		
+接口url：/toUpdateContractPage
+http://192.168.0.120:8081/v2/appContract/toUpdateContractPage.app?param={}
+功能描述：启动编辑协议页面所需数据。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	contract_id         string      协议ID
+	contract_type		string      协议类型
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误 1 失败
+	return_message	string	结果提示文本	
+    data：返回查询的对象信息
+		contract_type	 string  协议类型
+		buy_membername   string  会员名称（采购方）
+		sell_membername  string  会员名称（供货方）
+		
+		contract_title  string  标题
+		operate_user    string  操作人
+		operate_time    string  操作时间（2017-04-27  16:48:06）
+		user_time       string  有效期（2017-04-11 - 2017-06-12）
+		pay_type        string  结款规则
+		flow_type  		string  发货规则
+		sendgoods_type  string  运输方式
+		
+		
+		
+		getgoods_addresslist      list    收货地址列表{id 地址ID address 地址}
+		paymoney_banklist         list    付款银行列表{accountno 银行账号 bankname 银行名称}
+		
+		sendgoods_addresslist      list   发货地址列表{id 地址ID address 地址}
+		getmoney_banklist         list    收款银行列表{accountno 银行账号 bankname 银行名称}
+		
+		
+		
+		payer_code		string  付款账号
+		payer_name		string  付款行名称
+		getmoney_code   string  收款账号
+		getmoney_name   string  收款行名称
+		sendgoods_address string 发货地址
+		getgoods_address  string 收货地址
+		goods		      list 已选商品分类
+		note            string 备注
+
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "55da4721cd7049e186a17745a795a6cd",
+    "sys_func": "1212",
+    "contract_type": "2",
+    "sys_token": "1212",
+    "sys_user": "475814ffe832455dba6ecdf4306b3642",
+    "sys_uuid": "00033",
+    "contract_id": "d766d1fd092042388ddb7fdd4d52e0e7"
+}
+2，返回参数
+{
+    "data": {
+        "buy_membername": "长城商行",
+        "contract_title": "333333",
+        "contract_type": "2",
+        "flow_type": 0,
+        "getgoods_address": "1472e8f1776c41d7b20133c676eb9aca",
+        "getgoods_addresslist": [
+            {
+                "address": "o.懦弱需要",
+                "contact": "",
+                "id": "12d9f0fe901a472f902c4cd3641a1783",
+                "mmbId": "testshop001",
+                "mobilephone": "",
+                "phone": "",
+                "zipcode": ""
+            },
+            {
+                "address": "高宇",
+                "contact": "",
+                "id": "1472e8f1776c41d7b20133c676eb9aca",
+                "mmbId": "testshop001",
+                "mobilephone": "",
+                "phone": "",
+                "zipcode": ""
+            }
+        ],
+        "getmoney_banklist": [
+            {
+                "accountname": "124",
+                "accountno": "1234124124",
+                "bankname": "12412412",
+                "contact": "2412",
+                "id": "fa01dedf950b4d0abcd70b83b4cf53cf",
+                "mmbId": "55da4721cd7049e186a17745a795a6cd",
+                "mobilephone": "15644442222",
+                "phone": "4124214"
+            },
+            {
+                "accountname": "天美商行建行交易账号",
+                "accountno": "6398005525003",
+                "bankname": "建设银行中关村支行",
+                "contact": "老牛",
+                "id": "testbankacct0011",
+                "mmbId": "55da4721cd7049e186a17745a795a6cd",
+                "mobilephone": "13401350131",
+                "phone": "0108008901"
+            }
+        ],
+        "getmoney_code": "",
+        "getmoney_name": "",
+        "goods": [
+            {
+                "categoryName": "散装大米",
+                "ctgId": "1001002002",
+                "ctrId": "d766d1fd092042388ddb7fdd4d52e0e7",
+                "id": "9dc674d413ed436cba14578b256bf953"
+            },
+            {
+                "categoryName": "瓶装油",
+                "ctgId": "1001004001",
+                "ctrId": "d766d1fd092042388ddb7fdd4d52e0e7",
+                "id": "cbf7271df5bc4b999693e464a9595ff2"
+            }
+        ],
+        "note": "备注",
+        "operate_time": 1494915812000,
+        "operate_user": "475814ffe832455dba6ecdf4306b3642",
+        "pay_type": 0,
+        "payer_code": "123214453454",
+        "payer_name": "中国银行",
+        "paymoney_banklist": [
+            {
+                "accountname": "高于",
+                "accountno": "123214453454",
+                "bankname": "中国银行",
+                "contact": "高于",
+                "id": "ebdb64c130624557bb67324bf0d04cf2",
+                "mmbId": "testshop001",
+                "mobilephone": "213442351",
+                "phone": ""
+            },
+            {
+                "accountname": "高于",
+                "accountno": "6222189929039864012",
+                "bankname": "中国建设银行",
+                "contact": "北京",
+                "id": "fc992fffb07442339239a25c521b7ed5",
+                "mmbId": "testshop001",
+                "mobilephone": "",
+                "phone": "18022002299"
+            }
+        ],
+        "sell_membername": "天美贸易公司",
+        "sendgoods_address": "",
+        "sendgoods_addresslist": [
+            {
+                "address": "中联",
+                "areaId": "",
+                "contact": "龙某某",
+                "id": "2959cdb3931a48279155ee7586b34606",
+                "mmbId": "55da4721cd7049e186a17745a795a6cd",
+                "mobilephone": "18793153162",
+                "phone": "",
+                "zipcode": "730000"
+            }
+        ],
+        "sendgoods_type": 0,
+        "user_time": "2017-05-16 - 2017-05-16"
+    },
+    "return_code": 0,
+    "return_message": "成功!"
+}	
+===================================================
+接口url：/updateCTR
+http://192.168.0.120:8081/v2/appContract/updateCTR.app?param={}
+功能描述：修改协议。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	contract_id	 	string  协议id
+	
+	contract_title  string  标题
+	operate_user    string  操作人
+	user_time       string  有效期（2017-04-11 - 2017-06-12）
+	pay_type        string  结款规则
+	flow_type  		string  发货规则
+	sendgoods_type  string  运输方式
+
+	payer_code		string  付款账号
+	payer_name		string  付款行名称
+	getmoney_code   string  收款账号
+	getmoney_name   string  收款行名称
+	sendgoods_address string 发货地址
+	getgoods_address  string 收货地址
+	goods		      string 已选商品分类集合，逗号分隔
+	note            string 备注
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误 1 失败
+	return_message	string	结果提示文本	
+
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "55da4721cd7049e186a17745a795a6cd",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "b0611042cbcd40e1a3b911eb6f21a685",
+    "sys_uuid": "00033",
+    "contract_id": "d766d1fd092042388ddb7fdd4d52e0e7",
+    "goods": "1001002002,1001004001",
+    "user_time": "2017-05-16 - 2017-06-16",
+    "flow_type": "1",
+    "sendgoods_type": "1",
+    "pay_type": "1",
+    "payer_code": "123214453454",
+    "payer_name": "中国银行",
+    "getmoney_code": "",
+    "getmoney_name": "",
+    "getgoods_address": "高宇",
+    "sendgoods_address": "",
+    "buy_mmb_id": "testshop001",
+    "sell_mmb_id": "55da4721cd7049e186a17745a795a6cd",
+    "contract_title": "XXXX",
+    "note": "备注XXXXX"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}	
+===================================================	
+接口url：/showAgreeModal				  
+http://192.168.0.120:8081/v2/appContract/showAgreeModal.app?param={}
+功能描述：跳转同意协议输入界面。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	contract_id         string      协议ID
+	contract_status		string      协议状态
+	contract_type		string      协议类型
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误 1 失败
+	return_message	string	结果提示文本
+	data：返回查询的对象信息
+		addresslist      list    地址列表{id 地址ID address 地址}
+		banklist         list    银行列表{accountno 银行账号 bankname 银行名称}
+		bank_accountno   string  收/付款账号
+		address_name     string  收/付款地址
+		contract_id         string      协议ID
+		contract_status		string      协议状态
+		contract_type		string      协议类型
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "55da4721cd7049e186a17745a795a6cd",
+    "sys_func": "1212",
+    "contract_type": "2",
+    "sys_token": "1212",
+    "sys_user": "b0611042cbcd40e1a3b911eb6f21a685",
+    "sys_uuid": "00033",
+    "contract_status": "1",
+    "contract_id": "9929b4a49ff843ed8bb94a867926c6e2"
+}
+2，返回参数
+{
+    "data": {
+        "address_name": "",
+        "addresslist": [
+            {
+                "address": "中联",
+                "areaId": "",
+                "contact": "龙某某",
+                "id": "2959cdb3931a48279155ee7586b34606",
+                "mmbId": "55da4721cd7049e186a17745a795a6cd",
+                "mobilephone": "18793153162",
+                "phone": "",
+                "zipcode": "730000"
+            }
+        ],
+        "bank_accountno": "",
+        "banklist": [
+            {
+                "accountname": "124",
+                "accountno": "1234124124",
+                "bankname": "12412412",
+                "contact": "2412",
+                "id": "fa01dedf950b4d0abcd70b83b4cf53cf",
+                "mmbId": "55da4721cd7049e186a17745a795a6cd",
+                "mobilephone": "15644442222",
+                "phone": "4124214"
+            },
+            {
+                "accountname": "天美商行建行交易账号",
+                "accountno": "6398005525003",
+                "bankname": "建设银行中关村支行",
+                "contact": "老牛",
+                "id": "testbankacct0011",
+                "mmbId": "55da4721cd7049e186a17745a795a6cd",
+                "mobilephone": "13401350131",
+                "phone": "0108008901"
+            }
+        ],
+        "contract_id": "9929b4a49ff843ed8bb94a867926c6e2",
+        "contract_status": "1",
+        "contract_type": "2"
+    },
+    "return_code": 0,
+    "return_message": "成功!"
+}		
+===================================================	
+接口url：/agreeContract
+http://192.168.0.120:8081/v2/appContract/agreeContract.app?param={}					  
+功能描述：同意协议。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	contract_id         string      协议ID
+	contract_type		string      协议类型
+	address_name		string      地址
+	bank_accountno		string      账号
+	bank_accountname	string      银行名称
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误 1 失败
+	return_message	string	结果提示文本
+
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "55da4721cd7049e186a17745a795a6cd",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "b0611042cbcd40e1a3b911eb6f21a685",
+    "sys_uuid": "00033",
+    "contract_type": "2",
+    "contract_id": "9929b4a49ff843ed8bb94a867926c6e2",
+    "address_name": "中联",
+    "bank_accountno": "6398005525003",
+    "bank_accountname": "建设银行中关村支行"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}		
+===================================================		
+接口url：/operateContract		
+http://192.168.0.120:8081/v2/appContract/operateContract.app?param={}			  
+功能描述：协议各种操作后（拒绝，申请终止，同意终止，撤回终止，拒绝终止）的处理
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	contract_id         string      协议ID
+	contract_status		string      协议状态（操作后的状态）
+	
+	operate_type       String      当前操作类型（submit：提交  agree：同意 refuse:拒绝 terminate：终止 recallTerminate:撤销终止 agreeTerminate:同意终止 refuseTerminate:拒绝终止）
+	
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误 1 失败
+	return_message	string	结果提示文本
+
+参数示例：
+
+--------拒绝协议------------------------------------
+1，请求参数		 
+param={
+    "sys_member": "55da4721cd7049e186a17745a795a6cd",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "b0611042cbcd40e1a3b911eb6f21a685",
+    "sys_uuid": "00033",
+    "contract_type": "2",
+    "contract_id": "877d0f200dec402c8f90db286c53cbf4",
+    "operate_type": "refuse",
+    "contract_status": "1"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}	
+--------申请终止------------------------------------
+1，请求参数		 
+param={
+    "sys_member": "55da4721cd7049e186a17745a795a6cd",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "b0611042cbcd40e1a3b911eb6f21a685",
+    "sys_uuid": "00033",
+    "contract_type": "2",
+    "contract_id": "9929b4a49ff843ed8bb94a867926c6e2",
+    "operate_type": "terminate",
+    "contract_status": "3"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}	
+
+--------同意终止------------------------------------
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "b0611042cbcd40e1a3b911eb6f21a685",
+    "sys_uuid": "00033",
+    "contract_type": "1",
+    "contract_id": "9929b4a49ff843ed8bb94a867926c6e2",
+    "operate_type": "agreeTerminate",
+    "contract_status": "6"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}
+--------撤回终止------------------------------------
+1，请求参数		 
+param={
+    "sys_member": "55da4721cd7049e186a17745a795a6cd",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "b0611042cbcd40e1a3b911eb6f21a685",
+    "sys_uuid": "00033",
+    "contract_type": "2",
+    "contract_id": "9929b4a49ff843ed8bb94a867926c6e2",
+    "operate_type": "recallTerminate",
+    "contract_status": "6"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}	
+--------拒绝终止------------------------------------
+1，请求参数		 
+param={
+    "sys_member": "testshop001",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "b0611042cbcd40e1a3b911eb6f21a685",
+    "sys_uuid": "00033",
+    "contract_type": "1",
+    "contract_id": "9929b4a49ff843ed8bb94a867926c6e2",
+    "operate_type": "refuseTerminate",
+    "contract_status": "6"
+}
+2，返回参数
+{
+    "return_code": 0,
+    "return_message": "成功!"
+}	
+===================================================		
+接口url：/toCreateOrder
+http://192.168.0.120:8081/v2/appContract/toCreateOrder.app?param={}
+功能描述：根据协议下订单页面所需的数据
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	contract_id         string      协议ID
+	contract_type		string      协议类型
+	
+返回参数：map结构的json字串
+	return_code	    int	    结果码，0 成功，101 无权限，201 数据库错误 1 失败
+	return_message	string	结果提示文本			  
+	data：返回查询的对象信息
+		contract_type	 string  协议类型
+		buy_membername   string  会员名称（采购方）
+		sell_membername  string  会员名称（供货方）
+		
+		buy_mmb_id      string  甲方会员ID（买方）
+		sell_mmb_id     string  乙方会员ID（卖方）
+		
+		contract_title  string  标题
+		operate_user    string  操作人
+		operate_time    string  操作时间（2017-04-27  16:48:06）
+		user_time       string  有效期（2017-04-11 - 2017-06-12）
+		pay_type        string  结款规则
+		flow_type  		string  发货规则
+		sendgoods_type  string  运输方式
+	
+		addresslist      list    地址列表{id 地址ID address 地址}
+		banklist         list    银行列表{accountno 银行账号 bankname 银行名称}
+		payer_code		string  付款账号
+		payer_name		string  付款行名称
+		getmoney_code   string  收款账号
+		getmoney_name   string  收款行名称
+		sendgoods_address string 发货地址
+		getgoods_address  string 收货地址
+		
+		goods		      list 已选商品列表
+		
+		note            string 备注
+
+参数示例：
+1，请求参数		 
+param={
+    "sys_member": "55da4721cd7049e186a17745a795a6cd",
+    "sys_func": "1212",
+    "sys_token": "1212",
+    "sys_user": "b0611042cbcd40e1a3b911eb6f21a685",
+    "sys_uuid": "00033",
+    "contract_id": "d766d1fd092042388ddb7fdd4d52e0e7",
+    "contract_type": "2"
+}
+2，返回参数
+{
+    "data": {
+        "addresslist": [
+            {
+                "address": "中联",
+                "areaId": "",
+                "contact": "龙某某",
+                "id": "2959cdb3931a48279155ee7586b34606",
+                "mmbId": "55da4721cd7049e186a17745a795a6cd",
+                "mobilephone": "18793153162",
+                "phone": "",
+                "zipcode": "730000"
+            }
+        ],
+        "banklist": [
+            {
+                "accountname": "124",
+                "accountno": "1234124124",
+                "bankname": "12412412",
+                "contact": "2412",
+                "id": "fa01dedf950b4d0abcd70b83b4cf53cf",
+                "mmbId": "55da4721cd7049e186a17745a795a6cd",
+                "mobilephone": "15644442222",
+                "phone": "4124214"
+            },
+            {
+                "accountname": "天美商行建行交易账号",
+                "accountno": "6398005525003",
+                "bankname": "建设银行中关村支行",
+                "contact": "老牛",
+                "id": "testbankacct0011",
+                "mmbId": "55da4721cd7049e186a17745a795a6cd",
+                "mobilephone": "13401350131",
+                "phone": "0108008901"
+            }
+        ],
+        "buy_membername": "长城商行",
+        "buy_mmb_id": "testshop001",
+        "contract_title": "XXXX",
+        "contract_type": "2",
+        "flow_type": 1,
+        "getgoods_address": "高宇",
+        "getmoney_code": "6398005525003",
+        "getmoney_name": "建设银行中关村支行",
+        "goods": [
+            {
+                "categoryName": "散装大米",
+                "ctgId": "1001002002",
+                "ctrId": "d766d1fd092042388ddb7fdd4d52e0e7",
+                "id": "7987c548b5064b94855c4a8267cd56a4"
+            },
+            {
+                "categoryName": "瓶装油",
+                "ctgId": "1001004001",
+                "ctrId": "d766d1fd092042388ddb7fdd4d52e0e7",
+                "id": "047c9f281a9c4d4099d45728488b78a6"
+            }
+        ],
+        "note": "备注XXXXX",
+        "operate_time": 1494919086000,
+        "operate_user": "b0611042cbcd40e1a3b911eb6f21a685",
+        "pay_type": 1,
+        "payer_code": "123214453454",
+        "payer_name": "中国银行",
+        "sell_membername": "天美贸易公司",
+        "sell_mmb_id": "55da4721cd7049e186a17745a795a6cd",
+        "sendgoods_address": "中联",
+        "sendgoods_type": 1,
+        "user_time": "2017-05-16 - 2017-06-16"
+    },
+    "return_code": 0,
+    "return_message": "成功!"
+}		
+
+===================================================	
+
+接口url：/getUserCategoryByCtrId
+http://192.168.0.120:8081/v2/appGoods/getUserCategoryByCtrId.app?param={}			  
+功能描述：根据协议ID查询商品类别。
+入口参数：map结构的json字串
+	sys_token	string	令牌号	
+	sys_uuid	string	操作唯一编码（防重复提交）
+	sys_func	string	功能编码（用于授权检查）
+	sys_user	string	用户id
+	sys_member	string	会员id
+
+	ctrId         string      协议ID
+	sellMmbId         string      供应商ID
+返回参数：map结构的json字串
+	return_code	int	结果码，0 成功，101 无权限，201 数据库错误 1 失败
+	return_message	string	结果提示文本
+	
+	
+	list：返回的本页数据
+	    categoryId    string    商品分类ID
+		categoryName  string    商品分类名称
+		nodes          list      子节点{
+			categoryId    string    商品分类ID
+			categoryName  string    商品分类名称
+			nodes          list      子节点{...}
+			}
+参数示例：
+1，请求参数				
+param={
+    "sys_member": "55da4721cd7049e186a17745a795a6cd",
+    "sys_func": "1212",
+    "sellMmbId": "55da4721cd7049e186a17745a795a6cd",
+    "sys_token": "1212",
+    "sys_user": "b0611042cbcd40e1a3b911eb6f21a685",
+    "sys_uuid": "00033",
+    "ctrId": "d766d1fd092042388ddb7fdd4d52e0e7"
+}
+2，返回参数
+{
+    "categoryList": [
+        {
+            "categoryId": "1001002002",
+            "categoryName": "散装大米",
+            "nodes": [
+                {
+                    "categoryId": "c257a1ad14ac4bbfa2a08dd41318b0a7",
+                    "categoryName": "试销大米",
+                    "nodes": []
+                }
+            ]
+        },
+        {
+            "categoryId": "1001004001",
+            "categoryName": "瓶装油",
+            "nodes": [
+                {
+                    "categoryId": "b504dc3aca70495b8a41bf6a2583afc4",
+                    "categoryName": "西北油",
+                    "nodes": []
+                }
+            ]
+        }
+    ],
+    "return_code": 0,
+    "return_message": "成功"
+}
+===================================================		
