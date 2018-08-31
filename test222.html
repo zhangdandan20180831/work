@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>tab</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+    <div id="app">
+        <div>
+            <p v-unwrap:cr>111</p>
+        </div>
+        <div>
+            <p v-unwrap:gi>222</p>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //定义一个全局指令
+        Vue.directive('unwrap', {
+            bind: function(el, binding) {
+                el.setAttribute("data-luozz", binding.arg);
+                el.onclick = function() {
+                    document.querySelector("[data-luozz='" + binding.arg + "']").parentNode.remove();
+                }
+            }
+        });
+        new Vue({
+            el: '#app',
+            data: {},
+            methods: {}
+        })
+    </script>
+</body>
+</html>

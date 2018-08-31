@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- 引入样式 -->
+    <!-- <link rel="stylesheet" href="css/index.css"> -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- <link rel="stylesheet" href="css/iconfont.css"> -->
+    <!-- 先引入 Vue -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!-- <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script> -->
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.5.1/qs.js"></script>
+    <script src="navItem.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+            <el-radio-button :label="false">展开</el-radio-button>
+            <el-radio-button :label="true">收起</el-radio-button>
+        </el-radio-group>
+        <mycomponent></mycomponent>
+        <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+            
+
+            <el-submenu index="1">
+                <template slot="title">
+                    <i class="el-icon-location"></i>
+                    <span slot="title">导航一</span>
+                </template>
+                <el-menu-item index="1-3-1">选项1</el-menu-item>
+                <el-menu-item index="1-3-2">选项2</el-menu-item>
+                
+            </el-submenu>
+            <el-menu-item index="2">
+                <i class="el-icon-menu"></i>
+                <span slot="title">导航二</span>
+            </el-menu-item>
+            <el-submenu index="3">
+                <template slot="title">
+                    <i class="el-icon-location"></i>
+                    <span slot="title">导航3</span>
+                </template>
+                <el-menu-item index="3-3-1">选项31</el-menu-item>
+                <el-menu-item index="3-3-2">选项32</el-menu-item>
+                
+            </el-submenu>
+            <!-- <nav-item 
+                  v-for="(child, index) in item.children" 
+                  :item="child" 
+                  :nav-index="String(index)" 
+                  :key="index">
+                </nav-item> -->
+
+            <!-- <el-submenu :index="String(n)" v-for="(item, n) in menu"  v-show="item.children.length>0">
+                <template slot="title">
+                    <i class="el-icon-location"></i>
+                    <span slot="title">导航一</span>
+                </template>
+                <nav-item 
+                  v-for="(child, index) in item.children" 
+                  :item="child" 
+                  :nav-index="String(n)+'-'+String(index)" 
+                  :key="index">
+                </nav-item>
+                
+            </el-submenu>
+
+            <el-menu-item :index="item.path" v-for="(item, n) in menu"  v-show="item.children.length==0">
+                <i class="el-icon-menu"></i>
+                <span slot="title">{{item.name}}</span>
+            </el-menu-item> -->
+
+            
+        </el-menu>
+    </div>
+    <script>
+    axios.interceptors.request.use(function(config) {
+        config.headers = {
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+
+        config.data = Qs.stringify(config.data);
+        console.log('开始请求')
+        console.log('请求地址: ' + config.url);
+        console.log('请求参数：' + config.data);
+        return config
+    }, function(error) {
+        console.log('请求失败')
+        return Promise.reject(error)
+    })
+    //响应拦截器
+    axios.interceptors.response.use(function(response) {
+        return response;
+    }, function(error) {
+        return Promise.reject(error);
+    });
+     Vue.component('mycomponent',{
+    template: `<template><div>这是一个自定义组件</div></template>`,
+    data () {
+      return {
+        message: 'hello world'
+      }
+    }
+  })
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                
+                isCollapse: true,
+                menu: [
+                  {
+                    path:'1',
+                    name:'系统管理',
+                    children: [
+                      {
+                        path:'1-1',
+                        name:'用户管理',
+                        children: [
+                        {
+                          path:'1-1-1',
+                          name:'XXXX',
+                          children: []
+                        }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    path:'2',
+                    name:'系统管理',
+                    children: [
+                      {
+                        path:'2-1',
+                        name:'用户管理',
+                        children: []
+                      }
+                    ]
+                  },
+                  {
+                    path:'3',
+                    name:'SSS',
+                    children: []
+                  },
+                ]
+            }
+        },
+       
+        mounted: function() {
+            // this.queryCategory(); 
+            //this.queryCategory2(); 
+            // this.queryOrder();
+        },
+        methods: {
+            handleOpen(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            handleClose(key, keyPath) {
+                console.log(key, keyPath);
+            }
+        }
+    })
+    </script>
+</body>
+
+<style type="text/css">
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
+  }
+.text {
+    font-size: 14px;
+}
+
+.item {
+    margin-bottom: 18px;
+}
+
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: "";
+}
+
+.clearfix:after {
+    clear: both
+}
+
+.el-row {
+    margin-bottom: 20px;
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.el-col {
+    border-radius: 4px;
+}
+</style>
+
+</html>

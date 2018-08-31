@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- 引入样式 -->
+    <!-- <link rel="stylesheet" href="css/index.css"> -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- <link rel="stylesheet" href="css/iconfont.css"> -->
+    <!-- 先引入 Vue -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!-- <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script> -->
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.5.1/qs.js"></script>
+    <!-- <script src="navItem.js"></script> -->
+</head>
+
+<body>
+    <div id="app">
+       <!--  <div v-for="(item,index) in menu" :keys="index">
+        <h4 class="rt_tit" >
+            <i class="el-icon-menu"></i><el-checkbox v-model="item.resourceId">{{item.resourceName}}</el-checkbox></h4>
+         <div style="height: 50px;margin-left: 50px;">
+                <el-checkbox v-for="(child,index) in item.children" v-model="child.resourceId">{{child.resourceName}}</el-checkbox>
+            </div>
+       </div> -->
+
+       <el-card class="box-card" v-for="(item,index) in menu" :keys="index" v-show="item.parentResource == 0">
+          <div slot="header">
+            <el-checkbox v-model="item.resourceId" ><i class="el-icon-menu"></i>{{item.resourceName}}</el-checkbox>
+          </div>
+          <div >
+            <el-checkbox v-for="(child,index) in item.children" v-model="child.resourceId">{{child.resourceName}}</el-checkbox>
+          </div>
+        </el-card>
+    </div>
+    <script>
+    axios.interceptors.request.use(function(config) {
+        config.headers = {
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+
+        config.data = Qs.stringify(config.data);
+        console.log('开始请求')
+        console.log('请求地址: ' + config.url);
+        console.log('请求参数：' + config.data);
+        return config
+    }, function(error) {
+        console.log('请求失败')
+        return Promise.reject(error)
+    })
+    //响应拦截器
+    axios.interceptors.response.use(function(response) {
+        return response;
+    }, function(error) {
+        return Promise.reject(error);
+    });
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                isCollapse: true,
+                menu: []
+            }
+        },
+        mounted: function() {
+            // this.queryCategory(); 
+            //this.queryCategory2(); 
+            // this.queryOrder();
+            this.query();
+        },
+        methods: {
+            query() {
+                let url = 'http://localhost:8080/costing/resourceController/resourceAllList.do';
+                axios.post(url).then((response) => {
+                    console.log(JSON.stringify(response.data));
+                    Vue.set(this, 'menu', response.data);
+                }, (response) => {
+                    this.$alert("失败!", "提示信息", { showConfirmButton: true, type: 'error' });
+                });
+            }
+        }
+    })
+    </script>
+</body>
+<style type="text/css">
+h4.rt_tit {
+            display: block;
+            height: 20px;
+            font: bold 14px/20px 'Simsun';
+            color: #409EFF;
+            border-left: 7px solid #409EFF;
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 15px;
+        }
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
+}
+
+.text {
+    font-size: 14px;
+}
+
+.item {
+    margin-bottom: 18px;
+}
+.el-row {
+    margin-bottom: 20px;
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.el-col {
+    border-radius: 4px;
+}
+.box-card{
+    /*width: 480px;*/
+    margin-bottom: 20px; 
+}
+</style>
+<el-dialog title="分配权限" :visible.sync="giveResource"  width="30%">
+<el-form ref="saveResource" :model="resourceModel">
+<el-form-item label="角色权限：" :label-width="formLabelWidth">
+<el-select v-model="resourceModel.resourceId2"  multiple  clearable  placeholder="请选择..." >
+  <el-option v-for="item in resourceAllList"  
+    :key="item.resourceName"  
+      :label="item.resourceName"  
+    :value="item.resourceId" >  
+  </el-option>
+</el-select>
+</el-form-item>
+</el-form>
+<div slot="footer" class="dialog-footer">
+<el-button @click="giveResource = false">取 消</el-button>
+<el-button type="primary" @click="resourceToRole()">确 定</el-button>
+</div>
+</el-dialog>
+</html>
